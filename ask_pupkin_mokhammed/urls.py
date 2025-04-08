@@ -16,7 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from app import views
 urlpatterns = [
+    path('', views.index, name='index'),
+    path('question/<int:question_id>', views.question, name='question'),
     path('admin/', admin.site.urls),
+    path('ask', views.ask, name='ask'),
+    path('login', views.login, name='login'),
+    path('settings', views.settings, name='settings'),
+    path('signup', views.signup, name='signup'),
+    path('tag/', views.tag, name='all_tags'),  # Все теги
+    path('tag/<str:tag_name>/', views.tag, name='questions_by_tag')
+    #path('tag/', views.tag, name='tag')#почему здесь тэг не работает при просто объявлении tag, а только со слешем
+    
+
 ]

@@ -1,49 +1,9 @@
-<!doctype html>
-<html lang="en">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-<style> .text-base{
-    font-family: 'Playfair Display', serif;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-style: normal;
-}</style>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AskPupkin</title>
-    <link href="css/bootstrap.css" rel="stylesheet">
-</head>
-
-  <body>
-    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #74b1fa;">
-        <div class="container">
-            <a class="navbar-brand fs-3 font-style-basic text-base" href="#">AskPupkin</a>
-
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button  href="./ask.html" class="btn btn btn-outline-light" type="submit">Ask</button>
-            </form>
-
-            <div class="d-flex gap-2 align-items-center">
-                        <a href="login.html" class="link-light link-offset-2 link-underline-opacity-50 link-underline-opacity-100-hover font-monospace" style="margin-right: 10px">Log in</a>
-                        <a href="#" class="link-light link-offset-2 link-underline-opacity-50 link-underline-opacity-100-hover font-monospace">Register</a>
-                    
-                </div>
-
-            </div>
-
-        </div>
-    </nav>
-    <main class="container">
-        <div class="row">
+{% extends 'layouts/base_no_register.html' %}
+{% block content %}
         <div class="d-flex align-items-center gap-2 mb-3 mt-4 text-base">
             <h1>Register</h1>
         </div>
-             
-        <section class="col-8 vh-100">
-            <div class="row">
+        <div class="row">
                 <div class="col-12">
                     <form class="was-validated col-6">
                         <div class="mb-3">
@@ -123,36 +83,4 @@
                     </form>
                 </div>
             </div>
-        </section>
-        
-        
-        <aside class="col-4 vh-100">
-            
-            <h3 class="text-base fs-2 fw-semibold">Popular tags</h3>
-                    <div style="margin-top: 20px; margin-bottom: 20px;" class="font-monospace">
-                        <h5><span class="badge rounded-pill text-bg-primary mb-1">Perl</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">Python</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">TechnoPark</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">MySQL</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">django</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">Mail.ru</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">Voloshin</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">Firefox</span></h5>
-                    </div>
-            <h3 class="fs-2 fw-semibold text-base">Best Members</h3>
-            <div class="list-group font-monospace ">
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#" aria-current="true">
-                Mr.Freeman
-                </a>
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#">Dr.House</a>
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#">Bender</a>
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#">Queen Victoria</a>
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#">V.Pupkin</a>
-              </div>
-              
-        </aside>
-    </main>
-    <footer class="footer fixed-bottom p-4" style="background-color: #74b1fa;"></footer>
-    <script src="js/bootstrap.bundle.js"></script>
-  </body>
-</html>
+            {% endblock %}
