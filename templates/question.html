@@ -1,44 +1,91 @@
-<!-- нужно ли прописать нажатие некоторых кнопок(типа переход на страницу и т.п.), разобраться с обработкой ошибок(нужно ли мне что-то добавить), подумать над дизайном, нижняя часть этой страницы обрезает ввод текста(add your answer), как использовать шаблонизатор-->
-{% extends 'layouts/base_no_register.html' %}
+{% extends 'layouts/base.html' %}
+{% load static %}
 {% block content %}
             <div class="card mb-4 mt-3" style="width: 100%;">
                 <div class="card-body rounded border border-black" >
                   <div class="d-flex">
                     <div class="col-2 me-3">
                       <div style="height: 100px;" class="border rounded mb-2 w-100">
-                          <img src="#" alt="img" class="img-fluid">
+                        {% if question.author.profile.avatar %}
+                        <img src="{{ question.author.profile.avatar.url }}" alt="img" class="img-fluid h-100 w-100 object-fit-cover">
+                        {% else %}
+                        <img src="{% static 'img/default_avatar.png' %}" alt="img" class="img-fluid h-100 w-100 object-fit-cover">
+                        {% endif %}
                       </div>
                       <div>
                         
                     </div>
                 </div>
                 <div class="col-10 d-flex flex-column">
-                  <h2 class="card-title d-flex ms-2">{{ question.tittle }}</h2>
+                  <a href=""><h5 class="card-title">{{ question.title }}</h5></a>
                   <p class="card-text ms-2 mb-3">{{ question.content }}</p>
                   <div  class="card-link">
                     <span class="ms-2 mt-6 text-decoration-underline">Tags:</span>
-                    <a href=""><span class="badge rounded-pill text-bg-primary font-monospace">black-jack</span></a>
-                    <a href=""> <span class="badge rounded-pill text-bg-primary font-monospace">bender</span></a>
+                    {% for tag in question.tags.all %}
+                    <a href="{% url 'questions_by_tag' tag.name %}"><span class="badge rounded-pill text-bg-primary font-monospace">{{ tag.name }}</span></a>
+                    {% endfor %}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
               <hr>
-                
+              {% if answers %}
               <div class="row">
                 <h2 class="fw-semibold text-base">Answers</h2>
               </div>
-              
-              {% include 'components/answers.html' %}
-              {% include 'components/answers.html' %}
+              <div id="message-container">
+  {% for answer in answers %}
+    {% include 'components/answers.html' with answer=answer %}
+  {% endfor %}
+</div>
+              {% endif %}
               
     <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label" ><h4 class="text-decoration-underline fw-semibold text-base">Add your answer:</h4></label>
-        <textarea class="form-control mb-6" id="exampleFormControlTextarea1" rows="6" placeholder="Enter your text here"></textarea>
-      </div>
-      <div class="d-grid gap-2"> <button class="btn btn-outline-primary" type="submit">Send</button></div>
+      <form method="POST" action="{% url 'question' question.id %}">
+        {% csrf_token %}
+        <label for="answerContent" class="form-label"><h4 class="text-decoration-underline fw-semibold text-base">Add your answer:</h4></label>
+        <textarea class="form-control mb-6" id="answerContent" rows="6" placeholder="Enter your text here" name="content"></textarea>
+      <div class="d-grid gap-2"> <button class="btn btn-outline-primary mt-2" type="submit">Send</button></div>
+      </form>
+  </div>
+  {% if answers.paginator.count > 5 %}
+  {% include 'components/pagination.html' with questions=answers %}
+  {% endif %}
+<script src="https://unpkg.com/centrifuge@5.2.2/dist/centrifuge.js"></script>
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('message-container').scrollTo({
+                top: document.body.scrollHeight,
+            });
 
+    const centrifuge = new Centrifuge("ws://localhost:8020/connection/websocket", {
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzUwNzA5NjU1fQ.Q18Bus6jDA0TpQNaqYz3a04pQerZQc7rNtyPkgI2Iz0"
+    });
+    const msgcontainer= document.getElementById('message-container');
+    const msgtemplate = document.querySelector('[data-search="msg-template"]');
+    centrifuge.on('connecting', function (ctx) {
+    console.log('connecting: ${ctx.code}, ${ctx.reason}');
+    }).on('connected', function (ctx) {
+    console.log('connected over ${ctx.transport}');
+    }).on('disconnected', function (ctx) {
+    console.log('disconnected: ${ctx.code}, ${ctx.reason}');
+    }).connect();
 
-              
-        {% endblock %}
+    const sub = centrifuge.newSubscription("channel");
+    sub.on('publication', function (ctx) {
+      const {content} = ctx.data;
+      const newMessageElement=msgtemplate.cloneNode(true)
+      newMessageElement.querySelector('[data-search="msg-content"]').textContent = content;
+      newMessageElement.classList.remove('d-none');
+      msgcontainer.appendChild(newMessageElement);
+    }).on('subscribe', function (ctx) {
+      console.log('subscribing: ${ctx.code}, ${ctx.reason}');
+    }).on('subscribed', function (ctx) {
+    console.log('subscribed', ctx);
+    }).on('unsubscribed', function (ctx){
+    console.log('unsubscribed: ${ctx.code}, ${ctx.reason}');
+    }).subscribe();
+  });
+</script>
+            {% endblock %}

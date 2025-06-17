@@ -1,8 +1,8 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 <div class="d-flex align-items-center gap-2 mb-3 mt-4 fw-semibold text-base">
-    <h1>New Questions</h1>
-    <a href="#" class="ms-1">Hot Questions</a>
+    <a href="{% url 'ask' %}" class="navbar-brand fs-3 font-style-basic text-base"><h1>New Questions</h1></a>
+    <a href="{% url 'hot' %}" class="ms-1">Hot Questions</a>
 </div>
 {% for question in questions %}
 {% include 'components/question-item.html' %}

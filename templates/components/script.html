@@ -1,0 +1,9 @@
+<script>
+    const likeButtons = document.querySelectorAll('.like-button');
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const questionId = this.getAttribute('data-question-id');
+            console.log('Liked question:', questionId);
+        });
+    });
+</script>

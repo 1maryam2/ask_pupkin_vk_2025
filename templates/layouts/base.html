@@ -25,21 +25,37 @@
             <a class="navbar-brand fs-3 font-style-basic text-base" href="{% url 'index' %}" >AskPupkin</a>
 
             <form class="d-flex" role="search">
+                {% csrf_token %}
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button href="./ask.html" class="btn btn btn-outline-light" type="submit">Ask</button>
+                <button href="" class="btn btn btn-outline-light" type="submit">Ask</button>
             </form>
 
             <div class="d-flex gap-2 align-items-center">
-                <div>
-                    <img src="" class="img-thumbnail" alt="...">
-                </div>
+                
+                {% if user.username %}
+    {% if user.profile.avatar %}
+        <img src="{{ user.profile.avatar.url }}" class="img-thumbnail" alt="Profile photo" style="width: 50px; height: 50px; object-fit: cover;">
+    {% else %}
+        <img src="/static/img/default_avatar.png" class="img-thumbnail" alt="Default photo" style="width: 50px; height: 50px; object-fit: cover;">
+    {% endif %}
                 <div class="content">
-                    <div class="content__name text-base">Dr. Pepper</div>
+                    <div class="content__name text-base">{{ user.username }}</div>
                     <div class="content__links">
                         <a class="link-light link-offset-2 link-underline-opacity-50 link-underline-opacity-100-hover font-monospace" href="{% url 'settings' %}">Settings</a>
-                        <a href="{% url 'login' %}" class="link-light link-offset-2 link-underline-opacity-50 link-underline-opacity-100-hover ms-2 font-monospace">Log out</a>
+                        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                        <button class="btn btn-link link-light link-offset-2 link-underline-opacity-50 link-underline-opacity-100-hover font-monospace">Log out</button>
+                    </form>
                     </div>
                 </div>
+                {% else %}
+                <div class="content">
+                    <div class="content__links">
+                        <a class="link-light link-offset-2 link-underline-opacity-50 link-underline-opacity-100-hover font-monospace " href="{% url 'login' %}">Log in</a>
+                        <a href="{% url 'signup' %}" class="link-light link-offset-2 link-underline-opacity-50 link-underline-opacity-100-hover ms-3 font-monospace">Register</a>
+                    </div>
+                </div>
+                {% endif %}
 
             </div>
 
@@ -57,32 +73,145 @@
         
         
         <aside class="col-4 vh-100">
-            
             <h3 class="fs-2 fw-semibold text-base mt-5">Popular tags</h3>
                     <div style="margin-top: 20px; margin-bottom: 20px;">
-                        <h5><span class="badge rounded-pill text-bg-primary mb-1">Perl</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">Python</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">TechnoPark</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">MySQL</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">django</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">Mail.ru</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">Voloshin</span>
-                        <span class="badge rounded-pill text-bg-primary mb-1">Firefox</span></h5>
+                        {% for tag in popular_tags %}
+                        <a href="{% url 'questions_by_tag' tag.name %}" class="badge rounded-pill text-bg-primary fs-6 link-underline link-underline-opacity-0 mb-1">{{ tag.name }}</a>
+                        {% endfor %}
                     </div>
+                    
             <h3 class="text-base fs-2 fw-semibold">Best Members</h3>
             <div class="list-group font-monospace ">
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="{ url ''}" aria-current="true">
-                Mr.Freeman
-                </a>
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#">Dr.House</a>
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#">Bender</a>
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#">Queen Victoria</a>
-                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="#">V.Pupkin</a>
+                {% for member in best_members %}
+                <a class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="{ url ''}" aria-current="true">{{ member.username }}</a>
+                {% endfor %}
               </div>
               
         </aside>
+    </div>
     </main>
     <footer class="footer fixed-bottom p-4" style="background-color: #74b1fa;"></footer>
     <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
   </body>
 </html>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const likeButtons = document.querySelectorAll('.like-button');
+        
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const questionId = this.getAttribute('data-question-id');
+                const csrfToken = getCookie('csrftoken');
+                
+                fetch(`/question/${questionId}/like/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        const likeCount = this.querySelector('.like-count');
+                        likeCount.textContent = data.new_rating;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Ошибка при отправке лайка. Пожалуйста, войдите в систему.');
+                });
+            });
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+    function getCSRFToken() {
+        const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+        return csrfInput ? csrfInput.value : '';
+    }
+
+    document.querySelectorAll('.like-answer-button').forEach(button => {
+        button.addEventListener('click', async function() {
+            const answerId = this.getAttribute('data-answer-id');
+            const csrfToken = getCSRFToken();
+
+            try {
+                const response = await fetch(`/answer/${answerId}/like/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'same-origin'
+                });
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Ожидался JSON, но получен HTML');
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const likeCount = this.querySelector('.like-count');
+                    likeCount.textContent = data.new_rating;
+                    this.classList.toggle('liked', data.is_liked);
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Пожалуйста, войдите, чтобы ставить лайки');
+                window.location.href = '/login/'; 
+            }
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.mark-correct-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const answerId = this.dataset.answerId;
+                const isChecked = this.checked;
+                
+                fetch(`/answer/${answerId}/mark_correct/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        is_correct: isChecked
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        alert(data.message || 'Error occurred');
+                        this.checked = !isChecked;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.checked = !isChecked;
+                });
+            });
+        });
+    });
+</script>

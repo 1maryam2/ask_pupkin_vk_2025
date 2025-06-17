@@ -1,28 +1,36 @@
 {% load static %}
-<div class="card mb-4 mt-3" style="width: 100%;">
+<div class="card mb-4 mt-3" data-search ="msg-template" style="width: 100%;">
     <div class="card-body">
         <div class="d-flex">
             <div class="col-1 me-3">
                 <div style="height: 65px;" class="border rounded mb-2 w-100">
-                    <img src="#" alt="img" class="img-fluid">
+                    {% if answer.author.profile.avatar %}
+                        <img src="{{ answer.author.profile.avatar.url }}" alt="avatar" class="img-fluid h-100 w-100 object-fit-cover">
+                    {% else %}
+                        <img src="{% static 'img/default_avatar.png' %}" alt="avatar" class="img-fluid h-100 w-100 object-fit-cover">
+                    {% endif %}
                 </div>
-                <div>
-                    <button type="button" class="btn btn-outline-primary">
-                        <i class="bi bi-heart"></i> <span class="like-count">12</span>
-                      </button>
+                <form method="post" action="{% url 'like_answer' answer.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-heart"></i> 
+                        <span class="like-count">{{ answer.answerlike_set.count }}</span>
+                    </button>
+                </form>
+            </div>
+            <div class="col-11 d-flex flex-column">
+                <p class="card-text" data-search="msg-content">{{ answer.content }}</p>
+                <div class="form-check">
+                    <input class="form-check-input mark-correct-checkbox" 
+                           type="checkbox" 
+                           data-answer-id="{{ answer.id }}"
+                           {% if answer.is_correct %}checked{% endif %}
+                           {% if request.user != answer.question.author %}disabled{% endif %}>
+                    <label class="form-check-label" for="flexCheckChecked">
+                        <div class="fw-semibold">Correct!</div>
+                    </label>
                 </div>
             </div>
-    <div class="col-11 d-flex flex-column">
-        <div>
-      <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam ullam laboriosam, ipsam pariatur, unde dolores dolorum nobis eaque consectetur ad nostrum quia itaque ipsa. Quae tempora magnam corporis? Veniam, totam.</p>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-        <label class="form-check-label" for="flexCheckChecked">
-          <div class="fw-semibold">Correct!</div>
-        </label>
-      </div>
+        </div>
     </div>
-  </div>
-</div>
-</div>
 </div>

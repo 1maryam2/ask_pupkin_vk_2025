@@ -1,0 +1,6 @@
+<h3 class="fs-2 fw-semibold text-base mt-5">Popular tags</h3>
+                    <div style="margin-top: 20px; margin-bottom: 20px;">
+                        {% for tag in popular_tags %}
+                        <a href="{% url 'questions_by_tag' tag.name %}" class="badge rounded-pill text-bg-primary fs-6 link-underline link-underline-opacity-0 mb-1">{{ tag.name }}</a>
+                        {% endfor %}
+                    </div>

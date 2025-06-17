@@ -2,24 +2,35 @@
 <div class="card mb-4" style="width: 100%;">
     <div class="card-body">
         <div class="d-flex">
-            <div class="col-1 me-3 ">
+            <div class="col-1 me-3">
                 <div style="height: 70px;" class="border rounded mb-2 w-100">
-                    <img src="#" alt="img" class="img-fluid">
+                    {% if question.author.profile.avatar %}
+                    <img src="{{ question.author.profile.avatar.url }}" alt="Profile photo" class="img-fluid h-100 w-100 object-fit-cover">
+                    {% else %}
+                    <img src="{% static 'img/default_avatar.png' %}" alt="Default photo" class="img-fluid h-100 w-100 object-fit-cover">
+                    {% endif %}
                 </div>
-                <div>
-                    <button type="button" class="btn btn-outline-primary">
-                        <i class="bi bi-heart"></i> <span class="like-count">12</span>
-                      </button>
-                </div>
+                    <div>
+                        <button type="submit" class="btn btn-outline-primary like-button" data-question-id="{{ question.id }}">
+                            <i class="bi bi-heart"></i>
+                            <span class="like-count">
+                                {{ question.rating }}
+                            </span>
+                        </button>
+                    </div>
             </div>
             <div class="col-11">
-                <a href="{% url 'question' question_id=question.id %}"><h5 class="card-title">{{ question.tittle }}</h5></a>
-                <p class="card-text" style="margin-bottom: 32px;">{{ question.content }}</p>
-                <a href="{% url 'question' question_id=question.id %}" class="card-link" style="margin-right: 30px;">Answers (3)</a>
-              <span class="text-decoration-underline">Tags:</span>
-              {% for tag in question.tags %}
-              <a href="{% url 'questions_by_tag' tag_name=tag %}"><span class="badge rounded-pill text-bg-primary font-monospace">{{ tag }}</span></a>
-              {% endfor %}
+                <a href="{% url 'question' question.id %}"><h5 class="card-title">{{ question.title }}</h5></a>
+                <p class="card-text mb-3">{{ question.content|truncatewords:35 }}</p>
+                <a href="{% url 'question' question.id %}" class="card-link" style="margin-right: 30px;">
+                    Answers ({{ question.answer_set.count }})
+                </a>
+                <span class="text-decoration-underline">Tags:</span>
+                {% for tag in question.tags.all %}
+                <a href="{% url 'questions_by_tag' tag_name=tag.name %}">
+                    <span class="badge rounded-pill text-bg-primary font-monospace">{{ tag.name }}</span>
+                </a>
+                {% endfor %}
             </div>
         </div>
     </div>

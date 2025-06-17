@@ -1,26 +1,19 @@
-{% extends 'layouts/base_no_register.html' %}
+{% extends 'layouts/base.html' %}
+{% load bootstrap5 %}
 {% block content %}
         <div class="d-flex align-items-center gap-2 mb-3 mt-4 text-base">
             <h1>Log In</h1>
         </div>
             <div class="row">
                 <div class="col-10">
-                    <form class="was-validated col-9">
-                        <div class="mb-3 w-100">
-                            <label class="form-label">Login</label>
-                            <input class="form-control" type="text" id="login" required/>
-                            <div class="invalid-feedback">Please enter a login</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input class="form-control" type="text" id="password" required/>
-                            <div class="invalid-feedback">Please enter a password</div>
-                        </div>
-                        
+                    <form action="" method="POST" class="was-validated col-9">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        {% buttons %}
                         <button type="submit" class="btn btn btn-outline-primary mt-2 w-100">Log in</button> 
                         <div class="mt-2 d-flex align-items-center" ><div class="mt-2 mb-1">Don't have an account?</div>
                             <a href="{% url 'signup' %}" class="ms-2 d-block">Sign up</a></div>
-                        
+                        {% endbuttons %}
                         </form>
                         
                         

@@ -1,60 +1,60 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
         <div class="d-flex align-items-center gap-2 mb-3 mt-4 text-base">
-            <h1>Settings:</h1><h2 class="text-decoration-underline">Dr.Pepper</h2>
+            <h1>Settings:</h1><h2 class="text-decoration-underline">{{ user.username }}</h2>
         </div>
         <div class="row">
                 <div class="col-12">
-                    <form class="was-validated col-9">
+                    <form class="col-9" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                         <div class="mb-3">
-                            <label class="form-label">Login</label>
+                            <label for="username" class="form-label">Username</label>
                             <input
                                     class="form-control"
                                     type="text"
-                                    id="login"
-                                    name="Login"
-                                    placeholder="Dr.Pepper"
-                                    required
+                                    id="username"
+                                    name="username"
+                                    value="{{ user.username }}"
+                                    placeholder="Enter new username"
                             />
-                            <div class="invalid-feedback">Please enter new login or ignore this field</div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Email</label>
+                            <label for="email" class="form-label">Email</label>
                             <input
                                     class="form-control"
-                                    type="text"
+                                    type="email"
                                     id="email"
-                                    name="Email"
-                                    placeholder="dr.pepper@example.com"
-                                    required
+                                    name="email"
+                                    value="{{ user.email }}"
+                                    placeholder="Enter new email"
                             />
-                            <div class="invalid-feedback">Please enter new email or ignore this field</div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">NickName</label>
-                            <input
-                                    class="form-control"
-                                    type="text"
-                                    id="nickName"
-                                    name="NickName"
-                                    placeholder="Pepper"
-                                    required
-                            />
-                            <div class="invalid-feedback">Please enter new NickName or ignore this field</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Upload avatar</label>
+                            <label for="avatar" class="form-label">Upload avatar</label>
                             <input
                                     type="file"
                                     class="form-control"
+                                    id="avatar"
+                                    name="avatar"
                                     aria-label="file example"
-                                    placeholder="avatar.jpg"
-                                    required
                             />
-                            <div class="invalid-feedback">Please choose a file or ignore this field</div>
+                            {% if user.profile.avatar %}
+                                <div class="mt-2">
+                                    <small>Current avatar:</small>
+                                    <img src="{{ user.profile.avatar.url }}" alt="Current avatar" class="img-thumbnail" style="width: 200px; height: 200px; object-fit: cover;">
+                                </div>
+                            {% endif %}
                         </div>
         
-                        <button type="submit" class="btn btn btn-outline-primary w-100">Edit</button>
+                        <button type="submit" class="btn btn-outline-primary w-100">Save Changes</button>
                     </form>
                 </div>
             </div>

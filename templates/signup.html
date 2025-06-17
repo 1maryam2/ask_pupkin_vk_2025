@@ -1,85 +1,17 @@
-{% extends 'layouts/base_no_register.html' %}
+{% extends 'layouts/base.html' %}
+{% load bootstrap5 %}
 {% block content %}
         <div class="d-flex align-items-center gap-2 mb-3 mt-4 text-base">
             <h1>Register</h1>
         </div>
         <div class="row">
                 <div class="col-12">
-                    <form class="was-validated col-6">
-                        <div class="mb-3">
-                            <label class="form-label">Login</label>
-                            <input
-                                    class="form-control"
-                                    type="text"
-                                    id="login"
-                                    name="Login"
-                                    placeholder="Dr.Pepper"
-                                    required
-                            />
-                            <div class="invalid-feedback">Please enter a login</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input
-                                    class="form-control"
-                                    type="text"
-                                    id="email"
-                                    name="Email"
-                                    placeholder="dr.pepper@example.com"
-                                    required
-                            />
-                            <div class="invalid-feedback">Please enter an email</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">NickName</label>
-                            <input
-                                    class="form-control"
-                                    type="text"
-                                    id="nickName"
-                                    name="NickName"
-                                    placeholder="Pepper"
-                                    required
-                            />
-                            <div class="invalid-feedback">Please enter an NickName</div>
-                        </div>
-        
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input
-                                    class="form-control"
-                                    type="text"
-                                    id="password"
-                                    name="Password"
-                                    placeholder="*******"
-                                    required
-                            />
-                            <div class="invalid-feedback">Please enter an password</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Repeat password</label>
-                            <input
-                                    class="form-control"
-                                    type="text"
-                                    id="reapeatenPassword"
-                                    name="Repeat Password"
-                                    placeholder="*******"
-                                    required
-                            />
-                            <div class="invalid-feedback">Please repeat a password</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Upload avatar</label>
-                            <input
-                                    type="file"
-                                    class="form-control"
-                                    aria-label="file example"
-                                    placeholder="avatar.jpg"
-                                    required
-                            />
-                            <div class="invalid-feedback">Please choose a file</div>
-                        </div>
-        
+                    <form action="" method="POST" class="was-validated col-6" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        {% buttons %}
                         <button type="submit" class="btn btn-outline-primary w-100">Register!</button>
+                        {% endbuttons %}
                     </form>
                 </div>
             </div>

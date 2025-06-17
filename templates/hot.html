@@ -1,0 +1,11 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="d-flex align-items-center gap-2 mb-3 mt-4 fw-semibold text-base">
+    <h1>Hot questions</h1>
+    <a href="{% url 'index' %}" class="ms-1">New Questions</a>
+</div>
+{% for question in questions %}
+{% include 'components/question-item.html' %}
+{% endfor %}
+{% include 'components/pagination.html' %}
+{% endblock %}

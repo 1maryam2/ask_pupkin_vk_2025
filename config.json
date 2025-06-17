@@ -1,0 +1,10 @@
+{
+  "port": 8020,
+  "token_hmac_secret_key": "secret",
+  "admin": true,
+  "admin_password": "password",
+  "admin_secret": "aa4faee7-dc04-4ad3-92fc-8f52246af06b",
+  "api_key": "secret",
+  "allowed_origins": ["*"],
+  "allow_subscribe_for_client": true
+}

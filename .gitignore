@@ -1,4 +1,15 @@
 static
+staticfiles
+static_collected
+node_modules
+app/template_tags
+LICENSE
+CHANGELOG.md
+bootstrap-5.3.2-dist.zip
+centrifugo_4.0.0_linux_amd64.tar.gz
+package-lock.json
+package.json
+README.md
 # Создано с помощью https://www.toptal.com/developers/gitignore/api/django
 # Отредактируйте на https://www.toptal.com/developers/gitignore?templates=django
 

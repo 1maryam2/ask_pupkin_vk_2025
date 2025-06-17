@@ -1,8 +1,8 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 <div class="d-flex align-items-center gap-2 mb-3 mt-4 fw-semibold text-base">
-    {% if current_tag %}
-            <h1>Tag:</h1><h2 class="text-decoration-underline">{{ current_tag }}</h2>
+    {% if tag %}
+            <h1>Tag:</h1><h2 class="text-decoration-underline">{{ tag.name }} ({{ tag.questions.count }})</h2>
             {% endif %}
         </div>
 {% for question in questions %}

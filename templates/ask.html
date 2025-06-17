@@ -1,22 +1,24 @@
-{% extends 'layouts/base_no_register.html' %}
+{% extends 'layouts/base.html' %}
 {% block content %}
       <div class="d-flex align-items-center gap-2 mb-3 mt-4 text-base">
           <h1>New Question</h1>
       </div>
+      <form method="POST" action="{% url 'ask' %}">
+        {% csrf_token %}
             <div class="border border-2 border-dark p-3 rounded">
             <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Tittle</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="How to build a moonpark?">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title" placeholder="How to build a moonpark?" required>
               </div>
               <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Text</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="7" placeholder="Enter your text here"></textarea>
+                <label for="content" class="form-label">Text</label>
+                <textarea class="form-control" name="content" id="content" rows="7" placeholder="Enter your text here" required></textarea>
               </div>
               <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Tags</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="ex.: moon">
+                <label for="tags" class="form-label">Tags</label>
+                <input type="text" class="form-control" name="tags" id="tags" placeholder="ex.: moon">
               </div>
               <div class="d-grid gap-2"> <button class="btn btn-outline-primary" type="submit">Ask</button></div>
             </div>
+          </form>
             {% endblock %}
-       

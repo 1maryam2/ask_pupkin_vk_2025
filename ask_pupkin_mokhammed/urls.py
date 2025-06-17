@@ -15,19 +15,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from app import views
+from django.urls import path, include
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('question/<int:question_id>', views.question, name='question'),
+    path('', include('app.urls')),
     path('admin/', admin.site.urls),
-    path('ask', views.ask, name='ask'),
-    path('login', views.login, name='login'),
-    path('settings', views.settings, name='settings'),
-    path('signup', views.signup, name='signup'),
-    path('tag/', views.tag, name='all_tags'),  # Все теги
-    path('tag/<str:tag_name>/', views.tag, name='questions_by_tag')
-    #path('tag/', views.tag, name='tag')#почему здесь тэг не работает при просто объявлении tag, а только со слешем
-    
-
 ]
